@@ -1,0 +1,10 @@
+TO DO
+    X create train, track images
+    x place tracks
+    run train
+    run train to resources
+    upgrade train
+    have ai train place track
+    fight other train
+
+
