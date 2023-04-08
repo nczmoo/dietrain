@@ -4,10 +4,7 @@ class Config {
         length: 10,
         
     }
-    trains = {
-        me: {dir: 'down', x: 0, y: 0},
-        enemy: {dir: 'up', x: 9, y: 9},
-    }
+
     map = [];
 
     opposites = {
@@ -15,8 +12,14 @@ class Config {
         left: 'right',
         right: 'left',
         up: 'down',
+    };    
+    numOfResources = 3;
+    orientations = {
+        c : ['ne', 'se', 'sw', 'nw'], // go from n-s to e-w
+        s : ['ns', 'we'],
     };
-
+    resources = [];
+    score = 0;
     trackDirections = {
         ne: ['up', 'right'],
         ns: ['up', 'down'],
@@ -26,14 +29,11 @@ class Config {
         we: ['left', 'right'],
         
     }
-    orientations = {
-        c : ['ne', 'se', 'sw', 'nw'], // go from n-s to e-w
-        s : ['ns', 'we'],
+    tracks = [];
+    trains = {
+        me: {dir: 'down', x: 0, y: 0},
+        enemy: {dir: 'up', x: 9, y: 9},
     }
-
-    tracks = [        
-
-    ];
     // {owner: 'me', orientation: type: 'c'}
 
     constructor (){
@@ -45,7 +45,13 @@ class Config {
         }
         this.map[0][0] = 2;
         this.map[9][9] = 2;
-        
+        for (let i = 0; i < this.numOfResources; i++){
+            let x = randNum(2,7);
+            let y = randNum(2,7);
+            this.resources.push({x: x, y: y });
+            this.map[x][y] = 3;
+        }
+        console.log(this.resources);
         this.createTrack('me', 'c', 'se', this.trains.me.x, this.trains.me.y);
         this.createTrack('enemy', 'c', 'nw', this.trains.enemy.x, this.trains.enemy.y);        
     }

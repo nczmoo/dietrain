@@ -2,9 +2,12 @@ TO DO
     X create train, track images
     x place tracks
     X run train
-    run train to resources
+    x run train to resources
     upgrade train
     have ai train place track
     fight other train
+
+POLISH
+    one click to place tracks
 
 

@@ -4,6 +4,16 @@ class Game{
 	constructor(){
 		setInterval(this.looping, 1000);
 	}
+	areResourcesNear(trainID){
+		let train = this.config.trains[trainID];
+		for (let resource of this.config.resources){
+			let distance = Math.round(Math.sqrt(Math.pow(train.x - resource.x, 2) + Math.pow(train.y - resource.y, 2)));
+			if (trainID == 'me' && distance == 1){
+				this.config.score ++;
+			}			
+		}		
+	}
+
 	checkTracksForDir(tracks, direction){
 	
 		for (let where in tracks){
@@ -33,12 +43,12 @@ class Game{
 				*/
 			if (x + delta >= 0 && x + delta < this.config.board.length 
 				&& this.config.map[x + delta][y] != undefined 
-				&& this.config.map[x + delta][y] != 0){
+				&& this.config.map[x + delta][y] == 1){
 				tracks[horizontal[i]] = this.fetchTrackAt(x + delta, y);
 			}
 			if (y + delta >= 0 && y + delta < this.config.board.height 
 				&& this.config.map[x][y + delta] != undefined 
-				&& this.config.map[x][y + delta] != 0){
+				&& this.config.map[x][y + delta] == 1){
 				tracks[vertical[i]] = this.fetchTrackAt(x, y + delta);
 			}
 		}
@@ -46,6 +56,7 @@ class Game{
 	}
 
 	fetchPossibilities(x, y){
+		console.log(x, y);
 		let adjacents = this.fetchAdjacentTracks(x, y);
 		console.log(adjacents);
 		// is there a track left or right
@@ -113,6 +124,7 @@ class Game{
 
 	looping(){
 		for (let i in game.config.trains){
+			game.areResourcesNear(i);
 			let train = game.config.trains[i];
 			let adjacents = game.fetchAdjacentTracks(train.x, train.y);
 			let possDirections = game.config.trackDirections[game.fetchTrackAt(train.x, train.y).orientation];
@@ -138,7 +150,6 @@ class Game{
 				continue;
 			}
 			game.config.trains[i].dir = alternate;
-			console.log(i, train.dir, behind, alternate);
 		}
 		ui.refresh();
 	}

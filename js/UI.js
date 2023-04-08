@@ -4,6 +4,7 @@ class UI{
 	}
 	refresh(){
 		ui.drawBoard();
+		$("#score").html(game.config.score);
 	}
 
 	drawBoard(){
@@ -12,7 +13,7 @@ class UI{
 			txt += "<div class='h'>"			
 			for (let x = 0; x < game.config.board.length; x++){	
 				let boxContains = ' &nbsp; '
-				let boxClass = '';
+				let boxClass = '';				
 				let track = game.isThereTrackHere(x, y);								
 				let train = game.isTrainHere(x, y);
 				if (track != null){
@@ -22,6 +23,9 @@ class UI{
 				}
 				if (train != null){
 					boxContains = this.drawTrain(train.dir);
+				}
+				if (game.config.map[x][y] == 3){
+					boxContains = 'X';
 				}
 				txt += "<span id='board-" + x + "-" + y 
 				+ "' class='box " + boxClass + "'>" + boxContains + "</span>";
