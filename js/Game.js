@@ -103,6 +103,16 @@ class Game{
 		
 	}
 
+	isTrainHere(x, y){
+		for (let i in this.config.trains){
+			let train = this.config.trains[i];
+			if (train.x == x && train.y == y){
+				return train;
+			}
+		}
+		return null;
+	}
+
 	placeTrack(x, y, track){
 		console.log(x, y, track);
 		let type = 'c';

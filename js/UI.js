@@ -13,11 +13,16 @@ class UI{
 			for (let x = 0; x < game.config.board.length; x++){	
 				let boxContains = ' &nbsp; '
 				let boxClass = '';
-				let track = game.isThereTrackHere(x, y);				
+				let track = game.isThereTrackHere(x, y);								
+				let train = game.isTrainHere(x, y);
 				if (track != null){
 					boxContains = this.drawTrack(track.type, track. orientation);
 					boxClass = ' ' + track.owner;
-				}				
+					
+				}
+				if (train != null){
+					boxContains = this.drawTrain(train.dir);
+				}
 				txt += "<span id='board-" + x + "-" + y 
 				+ "' class='box " + boxClass + "'>" + boxContains + "</span>";
 			}
@@ -26,6 +31,11 @@ class UI{
 		$("#board").html(txt);
 	}
 
+	drawTrain(dir){
+		console.log(dir);
+		let txt = "<img src='img/train.png' class='train-" + dir + "'>";
+		return txt;
+	}
 	drawTrack(type, orientation){
 		console.log(type, orientation)
 		let txt = "<img src='img/track-" + type + ".png' class='" + type + "-" + orientation + "'>"; //nw

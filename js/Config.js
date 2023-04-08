@@ -5,8 +5,8 @@ class Config {
         
     }
     trains = {
-        me: {dir: 'up', x: 0, y: 0},
-        enemy: {dir: 'down', x: 9, y: 9},
+        me: {dir: 'down', x: 0, y: 0},
+        enemy: {dir: 'up', x: 9, y: 9},
     }
     map = [];
 
