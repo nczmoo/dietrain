@@ -10,6 +10,22 @@ class Config {
     }
     map = [];
 
+    opposites = {
+        down: 'up',
+        left: 'right',
+        right: 'left',
+        up: 'down',
+    };
+
+    trackDirections = {
+        ne: ['up', 'right'],
+        ns: ['up', 'down'],
+        nw: ['up', 'left'],
+        se: ['down', 'right'],
+        sw: ['down', 'left'],
+        we: ['left', 'right'],
+        
+    }
     orientations = {
         c : ['ne', 'se', 'sw', 'nw'], // go from n-s to e-w
         s : ['ns', 'we'],

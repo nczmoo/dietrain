@@ -32,12 +32,10 @@ class UI{
 	}
 
 	drawTrain(dir){
-		console.log(dir);
 		let txt = "<img src='img/train.png' class='train-" + dir + "'>";
 		return txt;
 	}
 	drawTrack(type, orientation){
-		console.log(type, orientation)
 		let txt = "<img src='img/track-" + type + ".png' class='" + type + "-" + orientation + "'>"; //nw
 		
 		return txt;

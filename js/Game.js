@@ -1,7 +1,8 @@
 class Game{
-	config = new Config();
+	config = new Config();	
+	gameLoop = null;
 	constructor(){
-
+		setInterval(this.looping, 1000);
 	}
 	checkTracksForDir(tracks, direction){
 	
@@ -85,11 +86,8 @@ class Game{
 	}
 
 	fetchTrackAt(x, y){
-		console.log(x, y);
 		for (let track of this.config.tracks){			
-			console.log(track);
 			if (track.x == x && track.y == y){		
-				console.log(x, y);
 				return track;
 			}
 		}
@@ -113,6 +111,38 @@ class Game{
 		return null;
 	}
 
+	looping(){
+		for (let i in game.config.trains){
+			let train = game.config.trains[i];
+			let adjacents = game.fetchAdjacentTracks(train.x, train.y);
+			let possDirections = game.config.trackDirections[game.fetchTrackAt(train.x, train.y).orientation];
+			//console.log(possDirections, adjacents);
+			let isThereTrackAhead = Object.keys(adjacents).includes( train.dir);
+			
+			if (isThereTrackAhead){
+				game.config.map[train.x][train.y] = 1;
+				game.config.trains[i].x = adjacents[train.dir].x;
+				game.config.trains[i].y = adjacents[train.dir].y;
+				game.config.map[train.x][train.y] = 2;
+				continue;
+			} 
+
+			//is there an open route besides behind me;
+			let behind = game.config.opposites[train.dir];
+			let alternate = possDirections[0];
+			if (possDirections[0] == behind){
+				alternate = possDirections[1];
+			}
+			if (train.dir == alternate){
+				game.config.trains[i].dir = behind;
+				continue;
+			}
+			game.config.trains[i].dir = alternate;
+			console.log(i, train.dir, behind, alternate);
+		}
+		ui.refresh();
+	}
+
 	placeTrack(x, y, track){
 		console.log(x, y, track);
 		let type = 'c';
@@ -120,9 +150,23 @@ class Game{
 			type = 's';
 		}
 		this.config.createTrack('me', type, track, x, y);
-		ui.refresh();
-		console.log(this.config.tracks, this.config.maps);
+		ui.refresh();		
+		$("#under").html('');
 	}
 
+	turnAround(trainID){		
+		let train = this.config.trains[trainID];
+		let track = this.fetchTrackAt (train.x, train.y);
+		let directions = this.config.trackDirections[track.orientation];
+
+
+		/*
+		if (directions[0] == train.dir){
+			this.config.trains[trainID].dir = directions[1];
+			return;
+		}
+		this.config.trains[trainID].dir = directions[0];
+		*/
+	}
 
 }

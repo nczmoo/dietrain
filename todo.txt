@@ -1,7 +1,7 @@
 TO DO
     X create train, track images
     x place tracks
-    run train
+    X run train
     run train to resources
     upgrade train
     have ai train place track
