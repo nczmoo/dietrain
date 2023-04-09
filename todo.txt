@@ -5,7 +5,11 @@ TO DO
     x run train to resources
     x upgrade train
     x have ai train place track
-    fight other train
+    x fight other train
+    x BUG: put a track into another the back of another track and the train went in to that train and just kept running
+    x BUG: put a track next to an enemy track and it wasn't even going in that direction and it still went there because the train didn't turn
+        Fixed by train can't go to op's track.
+    
 
 POLISH
     one click to place tracks
@@ -16,3 +20,12 @@ Question
         increase attack, defense, health
         repair train
         (speed would be too cumbersome in this format)
+
+DESIGN
+    Turn this into a turn-based game where you can do one of each per turn:
+        move 
+        turn around
+        build
+        upgrade
+        fire
+    Add modifiers to differents spaces to attack, defense, range, etc.

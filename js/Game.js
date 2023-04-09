@@ -38,7 +38,7 @@ class Game{
 				continue;				
 			}
 			let randSpace = empties[randNum(0, empties.length - 1)];
-			let possibilities = this.fetchPossibilities(randSpace.x, randSpace.y);
+			let possibilities = this.fetchPossibilities(randSpace.x, randSpace.y, 'enemy');
 			if (possibilities.length < 1){
 				console.log('not enough possiblities');
 				continue;
@@ -81,23 +81,31 @@ class Game{
 		
 	}
 
-	fetchAdjacentTracks(x, y){
+	fetchAdjacentTracks(x, y, owner){
 		let deltas = [-1, 1];
 		let horizontal = ['left', 'right'];
 		let vertical = ['up', 'down'];
 		let tracks = {};		
 		
 		for (let i in deltas){						
-			let delta = deltas[i];		
+			let delta = deltas[i], track = null;		
 			if (x + delta >= 0 && x + delta < this.config.board.length 
-				&& this.config.map[x + delta][y] != undefined 
+				&& this.config.map[x + delta][y] != undefined 				
 				&& this.config.map[x + delta][y] == 1){
-				tracks[horizontal[i]] = this.fetchTrackAt(x + delta, y);
+				track = this.fetchTrackAt(x + delta, y);				
+				if (track != null && track.owner == owner){
+					tracks[horizontal[i]] = track;
+				}
+				
 			}
+			track = null;
 			if (y + delta >= 0 && y + delta < this.config.board.height 
 				&& this.config.map[x][y + delta] != undefined 
-				&& this.config.map[x][y + delta] == 1){
-				tracks[vertical[i]] = this.fetchTrackAt(x, y + delta);
+				&& this.config.map[x][y + delta] == 1 ){
+				 track = this.fetchTrackAt(x, y + delta);				
+				 if (track != null && track.owner == owner){
+				 	tracks[vertical[i]] = track;
+				 }
 			}
 		}
 		return tracks;
@@ -118,8 +126,8 @@ class Game{
 		return ban;
 	}
 
-	fetchPossibilities(x, y){
-		let adjacents = this.fetchAdjacentTracks(x, y);
+	fetchPossibilities(x, y, owner){
+		let adjacents = this.fetchAdjacentTracks(x, y, owner);
 		// is there a track left or right
 		let north = false, east = false, south = false, west = false;
 		let possibilties = [];
@@ -176,6 +184,29 @@ class Game{
 		}
 		return null;
 	}
+
+	fightTrain(id){
+		
+		let opposite = {
+			enemy: 'me',
+			me: 'enemy',
+		}
+		let train = this.config.trains[id];
+		let op = this.config.trains[opposite[id]];
+		let distance = Math.round(Math.sqrt(Math.pow(train.x - op.x, 2) + Math.pow(train.y - op.y, 2)));
+		if (distance > train.range){
+			return;
+		}		
+		console.log(id + " fighting");
+		let dmg = op.defense - train.attack;
+		if (dmg > 0){
+			dmg = 0;
+		}
+		dmg = Math.abs(dmg);		
+		op.health -= dmg;
+		
+	}
+
 	isThereTrackHere(x, y){
 		if (this.config.map[x][y] == 0){
 			return null;
@@ -197,8 +228,9 @@ class Game{
 	looping(){
 		for (let i in game.config.trains){
 			game.areResourcesNear(i);
-			let train = game.config.trains[i];
-			let adjacents = game.fetchAdjacentTracks(train.x, train.y);
+			game.fightTrain(i);
+			let train = game.config.trains[i];			
+			let adjacents = game.fetchAdjacentTracks(train.x, train.y, i);
 			let possDirections = game.config.trackDirections[game.fetchTrackAt(train.x, train.y).orientation];
 			let isThereTrackAhead = Object.keys(adjacents).includes( train.dir);
 			
@@ -208,7 +240,6 @@ class Game{
 				continue;
 			} 
 
-			//is there an open route besides behind me;
 			let behind = game.config.opposites[train.dir];
 			let alternate = possDirections[0];
 			if (possDirections[0] == behind){
@@ -277,11 +308,11 @@ class Game{
 
 
 	upgrade(type){
-		if (this.config.score < this.upgrades[type]){
+		if (this.config.score < this.config.upgrades[type]){
 			return;
 		}
-		this.config.score -= this.upgrades[type];
-		this.upgrades[type] *= 1.5;
+		this.config.score -= this.config.upgrades[type];
+		this.config.upgrades[type] *= 1.5;
 		if (type == health){
 			this.config.health *= 1.1;			
 			return;

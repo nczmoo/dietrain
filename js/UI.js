@@ -3,13 +3,15 @@ class UI{
 
 	}
 	refresh(){
-		let fillers = ['score', 'health', 'attack', 'defense', 'maxScore'];
+		let fillers = ['score'];
 		ui.drawBoard();
 		for (let fill of fillers){
 			$("#" + fill).html(game.config[fill]);
 		}		
+		$("#maxScore").html(game.config.trains.me.health);
 		for (let upgrade in game.config.upgrades){
 			let cost = game.config.upgrades[upgrade];
+			$("#" + upgrade).html(game.config.trains.me[upgrade])
 			$("#upgrade-" + upgrade).html("&uarr;	 (-" + cost + ")");
 			$("#upgrade-" + upgrade).prop('disabled', false);
 			if (game.config.score < cost){
@@ -60,7 +62,7 @@ class UI{
 
 	showTrackPossibilities(x, y){
 		let txt = "";
-		let possibilties = game.fetchPossibilities(x, y);
+		let possibilties = game.fetchPossibilities(x, y, 'me');
 		for (let orientation of game.config.orientations.s){
 			if (!possibilties.includes(orientation)){
 				continue;

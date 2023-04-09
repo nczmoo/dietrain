@@ -1,12 +1,9 @@
 class Config {
-    attack = 1;
     board = {
         height: 10,
         length: 10,
         
     }
-    defense = 0;
-    health = 100;
     map = [];
     maxScore = 100;
     opposites = {
@@ -33,14 +30,15 @@ class Config {
     }
     tracks = [];
     trains = {
-        me: {dir: 'down', x: 0, y: 0},
-        enemy: {dir: 'up', x: 9, y: 9},
+        me: {dir: 'down', x: 0, y: 0,  attack: 1, range:1, defense: 0, health: 100},
+        enemy: {dir: 'up', x: 9, y: 9,  attack: 1, range:1, defense: 0, health: 100},
     }
 
     upgrades = {
         attack: 10,
         defense: 10,
         health: 10,
+        range: 10,
     }
     // {owner: 'me', orientation: type: 'c'}
 
