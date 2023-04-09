@@ -1,12 +1,14 @@
 class Config {
+    attack = 1;
     board = {
         height: 10,
         length: 10,
         
     }
-
+    defense = 0;
+    health = 100;
     map = [];
-
+    maxScore = 100;
     opposites = {
         down: 'up',
         left: 'right',
@@ -34,6 +36,12 @@ class Config {
         me: {dir: 'down', x: 0, y: 0},
         enemy: {dir: 'up', x: 9, y: 9},
     }
+
+    upgrades = {
+        attack: 10,
+        defense: 10,
+        health: 10,
+    }
     // {owner: 'me', orientation: type: 'c'}
 
     constructor (){
@@ -43,15 +51,14 @@ class Config {
                 this.map[x][y] = 0;
             }
         }
-        this.map[0][0] = 2;
-        this.map[9][9] = 2;
+        this.map[0][0] = 1;
+        this.map[9][9] = 1;
         for (let i = 0; i < this.numOfResources; i++){
             let x = randNum(2,7);
             let y = randNum(2,7);
             this.resources.push({x: x, y: y });
             this.map[x][y] = 3;
         }
-        console.log(this.resources);
         this.createTrack('me', 'c', 'se', this.trains.me.x, this.trains.me.y);
         this.createTrack('enemy', 'c', 'nw', this.trains.enemy.x, this.trains.enemy.y);        
     }

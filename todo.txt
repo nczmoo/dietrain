@@ -11,3 +11,8 @@ POLISH
     one click to place tracks
 
 
+Question
+    How to upgrade train?
+        increase attack, defense, health
+        repair train
+        (speed would be too cumbersome in this format)

@@ -57,10 +57,31 @@
 	</style>
 </head>
 <body>
-	<div id="score"></div>
+	
+	<div class="text-center">
+		Score: <span id="score"></span>/<span id="maxScore"></span>
+	</div>
 	<div id="board" class="text-center"></div>
 	<div id="under" class="text-center"></div>
-
+	<div id="upgrade">
+		<div class="row">
+			<div class="col text-center">
+				Health: 
+				<span id='health'></span>
+				<button id="upgrade-health" class="verb1 btn btn-outline-success"></button>
+			</div>
+			<div class="col text-center">
+				Attack: 
+				<span id="attack"></span>
+				<button id="upgrade-attack" class="verb1 btn btn-outline-success"></button>
+			</div>
+			<div class="col text-center">
+				Defense:
+				<span id="defense"></span>
+				<button id="upgrade-defense" class="verb1 btn btn-outline-success"></button>
+			</div>
+		</div>
+	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<script src='https://code.jquery.com/jquery-3.6.0.js'></script>

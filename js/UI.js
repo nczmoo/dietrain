@@ -3,8 +3,20 @@ class UI{
 
 	}
 	refresh(){
+		let fillers = ['score', 'health', 'attack', 'defense', 'maxScore'];
 		ui.drawBoard();
-		$("#score").html(game.config.score);
+		for (let fill of fillers){
+			$("#" + fill).html(game.config[fill]);
+		}		
+		for (let upgrade in game.config.upgrades){
+			let cost = game.config.upgrades[upgrade];
+			$("#upgrade-" + upgrade).html("&uarr;	 (-" + cost + ")");
+			$("#upgrade-" + upgrade).prop('disabled', false);
+			if (game.config.score < cost){
+				$("#upgrade-" + upgrade).prop('disabled', true);
+			}
+		}
+		
 	}
 
 	drawBoard(){
@@ -13,11 +25,11 @@ class UI{
 			txt += "<div class='h'>"			
 			for (let x = 0; x < game.config.board.length; x++){	
 				let boxContains = ' &nbsp; '
-				let boxClass = '';				
+				let boxClass = ' empty ';				
 				let track = game.isThereTrackHere(x, y);								
 				let train = game.isTrainHere(x, y);
 				if (track != null){
-					boxContains = this.drawTrack(track.type, track. orientation);
+					boxContains = this.drawTrack(track.type, track. orientation, x, y);
 					boxClass = ' ' + track.owner;
 					
 				}
@@ -39,13 +51,15 @@ class UI{
 		let txt = "<img src='img/train.png' class='train-" + dir + "'>";
 		return txt;
 	}
-	drawTrack(type, orientation){
-		let txt = "<img src='img/track-" + type + ".png' class='" + type + "-" + orientation + "'>"; //nw
+	drawTrack(type, orientation, x, y){
+		let txt = "<img src='img/track-" + type + ".png' id='track-" + x + "-" 
+			+ y + "' class='track " + type + "-" + orientation + "'>"; //nw
 		
 		return txt;
 	}
 
 	showTrackPossibilities(x, y){
+		console.log(x,y, game.config.map[x][y]);
 		let txt = "";
 		let possibilties = game.fetchPossibilities(x, y);
 		console.log(possibilties);
@@ -64,6 +78,7 @@ class UI{
 				+ "-" + orientation + "' class='c-" + orientation 
 				+ " me-3 placeTrack' >";
 		}		
+		console.log(txt);
 		$("#under").html(txt);
 	}
 }

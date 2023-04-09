@@ -18,7 +18,6 @@ class Game{
 	
 		for (let where in tracks){
 			let track = tracks[where];
-			console.log(where, track);
 			if (track.orientation.includes(direction)){
 				return true;
 			}
@@ -35,12 +34,6 @@ class Game{
 		
 		for (let i in deltas){						
 			let delta = deltas[i];		
-			//console.log(x, x + delta);
-			/*
-			console.log(x + delta >= 0, x + delta < this.config.board.length, 
-				this.config.map[x + delta][y] != undefined,
-				this.config.map[x + delta][y] != 0)	;
-				*/
 			if (x + delta >= 0 && x + delta < this.config.board.length 
 				&& this.config.map[x + delta][y] != undefined 
 				&& this.config.map[x + delta][y] == 1){
@@ -56,9 +49,7 @@ class Game{
 	}
 
 	fetchPossibilities(x, y){
-		console.log(x, y);
 		let adjacents = this.fetchAdjacentTracks(x, y);
-		console.log(adjacents);
 		// is there a track left or right
 		let north = false, east = false, south = false, west = false;
 		let possibilties = [];
@@ -128,14 +119,11 @@ class Game{
 			let train = game.config.trains[i];
 			let adjacents = game.fetchAdjacentTracks(train.x, train.y);
 			let possDirections = game.config.trackDirections[game.fetchTrackAt(train.x, train.y).orientation];
-			//console.log(possDirections, adjacents);
 			let isThereTrackAhead = Object.keys(adjacents).includes( train.dir);
 			
 			if (isThereTrackAhead){
-				game.config.map[train.x][train.y] = 1;
 				game.config.trains[i].x = adjacents[train.dir].x;
 				game.config.trains[i].y = adjacents[train.dir].y;
-				game.config.map[train.x][train.y] = 2;
 				continue;
 			} 
 
@@ -154,8 +142,7 @@ class Game{
 		ui.refresh();
 	}
 
-	placeTrack(x, y, track){
-		console.log(x, y, track);
+	placeTrack(x, y, track){	
 		let type = 'c';
 		if (this.config.orientations.s.includes(track)){
 			type = 's';
@@ -163,6 +150,19 @@ class Game{
 		this.config.createTrack('me', type, track, x, y);
 		ui.refresh();		
 		$("#under").html('');
+	}
+
+	removeTrack(x, y){
+		if (this.isTrainHere(x, y)){
+			return;
+		}
+		this.config.map[x][y] = 0;
+		for (let i in this.config.tracks){
+			let track = this.config.tracks[i];
+			if (track.x == x && track.y == y){
+				this.config.tracks.splice(i);
+			}
+		}
 	}
 
 	turnAround(trainID){		
@@ -180,4 +180,17 @@ class Game{
 		*/
 	}
 
+
+	upgrade(type){
+		if (this.config.score < this.upgrades[type]){
+			return;
+		}
+		this.config.score -= this.upgrades[type];
+		this.upgrades[type] *= 1.5;
+		if (type == health){
+			this.config.health *= 1.1;			
+			return;
+		}
+		this.config[type] ++;
+	}
 }
