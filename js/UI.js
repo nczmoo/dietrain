@@ -59,10 +59,8 @@ class UI{
 	}
 
 	showTrackPossibilities(x, y){
-		console.log(x,y, game.config.map[x][y]);
 		let txt = "";
 		let possibilties = game.fetchPossibilities(x, y);
-		console.log(possibilties);
 		for (let orientation of game.config.orientations.s){
 			if (!possibilties.includes(orientation)){
 				continue;
@@ -78,7 +76,6 @@ class UI{
 				+ "-" + orientation + "' class='c-" + orientation 
 				+ " me-3 placeTrack' >";
 		}		
-		console.log(txt);
 		$("#under").html(txt);
 	}
 }

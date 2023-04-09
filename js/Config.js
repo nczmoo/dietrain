@@ -54,11 +54,17 @@ class Config {
         this.map[0][0] = 1;
         this.map[9][9] = 1;
         for (let i = 0; i < this.numOfResources; i++){
-            let x = randNum(2,7);
-            let y = randNum(2,7);
-            this.resources.push({x: x, y: y });
-            this.map[x][y] = 3;
+
+
+                let x = randNum(2,7);
+                let y = randNum(2,7);
+                
+                this.resources.push({x: x, y: y });
+                this.map[x][y] = 3;
+
+
         }
+        console.log(this.resources);
         this.createTrack('me', 'c', 'se', this.trains.me.x, this.trains.me.y);
         this.createTrack('enemy', 'c', 'nw', this.trains.enemy.x, this.trains.enemy.y);        
     }

@@ -26,6 +26,61 @@ class Game{
 	
 	}
 
+	enemyPlacesTrack(){
+		let tries = 0;
+		while (tries < 10){
+			tries ++;
+			let rand = this.fetchRandTrack(); // doesn't return track just id
+			let track = this.config.tracks[rand];
+			let empties = this.fetchAdjacentEmpties(track.x, track.y);
+			if (empties.length < 1){
+				console.log('not enough empties');
+				continue;				
+			}
+			let randSpace = empties[randNum(0, empties.length - 1)];
+			let possibilities = this.fetchPossibilities(randSpace.x, randSpace.y);
+			if (possibilities.length < 1){
+				console.log('not enough possiblities');
+				continue;
+			}
+
+			let orientation = possibilities[randNum(0, possibilities.length - 1)];
+			let type = 's';
+			if (this.config.orientations.c.includes(orientation)){
+				type = 'c';
+			}
+			this.config.createTrack('enemy', type, orientation, randSpace.x, randSpace.y)
+
+			break;
+		}
+	}
+
+	fetchAdjacentEmpties(x, y){
+		let xDelta = {
+			down: 0,
+			left: -1,
+			right: 1,
+			up: 0,
+		}
+		let yDelta = {
+			down: 1,
+			left: 0,
+			right: 0,
+			up: -1,
+		}
+		let directions = this.config.trackDirections[this.fetchTrackAt(x, y).orientation];
+		let empties = [];
+		for (let direction of directions){
+			let newX = x + xDelta[direction];
+			let newY = y + yDelta[direction];
+			if (this.config.map[newX][newY] == 0){
+				empties.push({x: newX ,y: newY,});
+			}
+		}
+		return empties;
+		
+	}
+
 	fetchAdjacentTracks(x, y){
 		let deltas = [-1, 1];
 		let horizontal = ['left', 'right'];
@@ -46,6 +101,21 @@ class Game{
 			}
 		}
 		return tracks;
+	}
+
+	fetchIncompatibles(x, y){
+		let ban = [];
+		if (x == 0){
+			ban.push('w');
+		} else if (x == this.config.board.length - 1){
+			ban.push('e');
+		}
+		if (y == 0){
+			ban.push('n');
+		} else if (y == this.config.board.height - 1){
+			ban.push('s');
+		}
+		return ban;
 	}
 
 	fetchPossibilities(x, y){
@@ -84,7 +154,18 @@ class Game{
 			}
 			
 		}
-		return possibilties;
+		
+		return this.prune(possibilties, x, y);
+	}
+
+	fetchRandTrack(){ // jsut assuming it's an enemy;
+		while (1){
+			let rand = randNum(0, this.config.tracks.length - 1);
+			let track = this.config.tracks[rand];
+			if (track.owner == 'enemy'){
+				return rand;
+			}
+		}
 	}
 
 	fetchTrackAt(x, y){
@@ -150,6 +231,20 @@ class Game{
 		this.config.createTrack('me', type, track, x, y);
 		ui.refresh();		
 		$("#under").html('');
+		this.enemyPlacesTrack();
+	}
+
+	prune(possibilities, x, y){
+		let avoid = this.fetchIncompatibles(x, y);		
+		for (let id in possibilities){
+			let possibility = possibilities[id];
+			for (let i of avoid){
+				if (possibility.includes(i)){
+					possibilities.splice(id);
+				}
+			}
+		}		
+		return possibilities;
 	}
 
 	removeTrack(x, y){
